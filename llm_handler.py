@@ -17,7 +17,7 @@ def get_ai_response(prompt):
         
         # Creating completion with Llama 3
         completion = client.chat.completions.create(
-            model="llama3-8b-8192",
+            model="llama-3.1-8b-instant",
             messages=[
                 {"role": "system", "content": "You are a secure intelligence AI. Provide concise, professional intel."},
                 {"role": "user", "content": prompt}
