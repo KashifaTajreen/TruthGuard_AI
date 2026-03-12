@@ -4,20 +4,39 @@ import re
 def detect_prompt_injection(prompt):
     p = prompt.lower()
     
-    # Advanced patterns used by hackers
-    threat_patterns = {
-        r"ignore (all|previous|said) instructions": "Instruction Bypass",
-        r"(reveal|show) (system|hidden) prompt": "Data Extraction",
-        r"api key": "Credential Theft",
-        r"act as": "Roleplay Attack",
-        r"jailbreak": "Safety Override"
-    }
+    # Advanced logic: looks for keywords even if words are inserted between them
+    threats = [
+        (r"ignore.*instruction", "Bypass Attempt"),
+        (r"reveal.*prompt", "Data Leak Attempt"),
+        (r"system.*prompt", "System Discovery"),
+        (r"act as", "Persona Hijack"),
+        (r"api key", "Credential Theft")
+    ]
     
-    for pattern, label in threat_patterns.items():
+    for pattern, label in threats:
         if re.search(pattern, p):
             return True, label
             
     return False, None
+# import re
+
+# def detect_prompt_injection(prompt):
+#     p = prompt.lower()
+    
+#     # Advanced patterns used by hackers
+#     threat_patterns = {
+#         r"ignore (all|previous|said) instructions": "Instruction Bypass",
+#         r"(reveal|show) (system|hidden) prompt": "Data Extraction",
+#         r"api key": "Credential Theft",
+#         r"act as": "Roleplay Attack",
+#         r"jailbreak": "Safety Override"
+#     }
+    
+#     for pattern, label in threat_patterns.items():
+#         if re.search(pattern, p):
+#             return True, label
+            
+#     return False, None
 # import re
 
 # dangerous_patterns = [
