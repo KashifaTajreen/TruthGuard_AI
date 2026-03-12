@@ -120,3 +120,13 @@ if mode == "Verify External AI Response":
 
         else:
             st.warning("Possible hallucination")
+
+wiki_data = check_wikipedia(user_prompt)
+
+score = hallucination_score(ai_answer, wiki_data["text"])
+
+st.metric("Truth Score", str(score)+"%")
+
+st.subheader("Source")
+
+st.write(wiki_data["source"])
