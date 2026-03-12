@@ -3,22 +3,41 @@ from groq import Groq
 
 def get_ai_response(prompt):
     try:
-        # Pull key from Streamlit Secrets
         api_key = st.secrets["GROQ_API_KEY"]
         client = Groq(api_key=api_key)
         
-        response = client.chat.completions.create(
-            model="llama-3.1-8b-instant",
+        completion = client.chat.completions.create(
+            model="llama-3.1-8b-instant", # The most stable Groq model right now
             messages=[
-                {"role": "system", "content": "You are a professional Intelligence Officer. Provide strictly factual, concise, and structured intel reports. No small talk."},
+                {"role": "system", "content": "You are a top-secret intelligence AI. Give short, factual answers."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.1, # Keep it professional and factual
-            max_tokens=800
+            temperature=0.1
         )
-        return response.choices[0].message.content
+        return completion.choices[0].message.content
     except Exception as e:
-        return f"SYSTEM ERROR: API_CONNECTION_FAILED - {str(e)}"
+        return f"ERROR: SYSTEM FAILURE - {str(e)}"
+# import streamlit as st
+# from groq import Groq
+
+# def get_ai_response(prompt):
+#     try:
+#         # Pull key from Streamlit Secrets
+#         api_key = st.secrets["GROQ_API_KEY"]
+#         client = Groq(api_key=api_key)
+        
+#         response = client.chat.completions.create(
+#             model="llama-3.1-8b-instant",
+#             messages=[
+#                 {"role": "system", "content": "You are a professional Intelligence Officer. Provide strictly factual, concise, and structured intel reports. No small talk."},
+#                 {"role": "user", "content": prompt}
+#             ],
+#             temperature=0.1, # Keep it professional and factual
+#             max_tokens=800
+#         )
+#         return response.choices[0].message.content
+#     except Exception as e:
+#         return f"SYSTEM ERROR: API_CONNECTION_FAILED - {str(e)}"
 # import streamlit as st
 # from groq import Groq
 
