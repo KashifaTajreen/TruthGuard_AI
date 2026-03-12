@@ -1,12 +1,17 @@
 from openai import OpenAI
 import os
 
+api_key = os.getenv("GROQ_API_KEY")
+
 client = OpenAI(
     base_url="https://api.groq.com/openai/v1",
-    api_key=os.getenv("GROQ_API_KEY")
+    api_key=api_key
 )
 
 def get_ai_response(prompt):
+
+    if not api_key:
+        return "API key missing."
 
     response = client.chat.completions.create(
         model="llama3-8b-8192",
