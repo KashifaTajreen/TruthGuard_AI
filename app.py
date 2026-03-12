@@ -5,45 +5,56 @@ from hallucination_checker import check_wikipedia, hallucination_score
 
 st.set_page_config(page_title="PROTOCOL: TRUTHGUARD", layout="wide")
 
-# UI with better color contrast
+# UI with professional contrast and Spy Theme
 st.markdown("""
     <style>
     .main { background-color: #050505; color: #00FF41; font-family: 'Courier New', monospace; }
     .stTextInput>div>div>input { background-color: #111; color: #00FF41; border: 1px solid #00FF41; }
-    .stButton>button { background-color: #003300; color: #00FF41; border: 1px solid #00FF41; font-weight: bold; }
-    /* Red text for errors */
-    .stAlert { background-color: #200; border: 1px solid #f00; color: #f66; }
-    h1 { text-shadow: 2px 2px #003300; }
+    .stButton>button { background-color: #003300; color: #00FF41; border: 1px solid #00FF41; width: 100%; }
+    .stButton>button:hover { background-color: #00FF41; color: black; }
+    .stAlert { background-color: #1a0000; border: 1px solid #ff0000; color: #ff9999; }
+    h1, h2, h3 { color: #00FF41 !important; }
     </style>
     """, unsafe_allow_html=True)
 
 st.title("📂 PROTOCOL: TRUTHGUARD")
-st.caption("AI VETTING SYSTEM // MODEL: LLAMA-3.1-8B")
+st.caption("AI VETTING SYSTEM // STATUS: ENCRYPTED")
 
 tab1, tab2 = st.tabs(["[ DISPATCH ]", "[ EXTERNAL ANALYST ]"])
 
 with tab1:
-    user_prompt = st.text_input("INPUT INTEL QUERY:")
-    if st.button("EXECUTE"):
-        is_attack, pattern = detect_prompt_injection(user_prompt)
-        
-        if is_attack:
-            st.error(f"⚠️ SECURITY BREACH: {pattern.upper()} DETECTED")
-        else:
-            st.success("✅ SCAN CLEAN: NO INJECTION DETECTED")
-            ai_answer = get_ai_response(user_prompt)
+    user_prompt = st.text_input("ENTER QUERY:")
+    if st.button("EXECUTE ANALYSIS"):
+        if user_prompt:
+            # 1. Check Injection
+            is_attack, pattern = detect_prompt_injection(user_prompt)
             
-            if "ERROR" in ai_answer:
-                st.error(ai_answer)
+            if is_attack:
+                st.error(f"⚠️ SECURITY BREACH: {pattern.upper()} DETECTED")
             else:
-                st.info(f"**AI INTEL:**\n\n{ai_answer}")
-                # Simple keyword for Wiki
-                wiki_data = check_wikipedia(user_prompt.split()[-1]) 
-                if wiki_data:
-                    score = hallucination_score(ai_answer, wiki_data["text"])
-                    st.metric("TRUTH SCORE", f"{score}%")
+                st.success("✅ SCAN CLEAN: NO THREATS FOUND")
+                
+                # 2. Get AI Response
+                with st.spinner("DECRYPTING INTEL..."):
+                    ai_answer = get_ai_response(user_prompt)
+                
+                if "ERROR" in ai_answer:
+                    st.error(ai_answer)
                 else:
-                    st.warning("⚠️ ARCHIVE MISSING: Could not find Wikipedia match for this specific query.")
+                    st.info(f"**INTEL REPORT:**\n\n{ai_answer}")
+                    
+                    # 3. Verification
+                    # We use the first two words of the prompt as a Wikipedia search key
+                    search_key = " ".join(user_prompt.split()[:2])
+                    wiki_data = check_wikipedia(search_key)
+                    
+                    if wiki_data:
+                        score = hallucination_score(ai_answer, wiki_data["text"])
+                        st.metric("TRUTH SCORE", f"{score}%")
+                        st.progress(score/100)
+                        st.caption(f"Source: {wiki_data['source']}")
+                    else:
+                        st.warning("⚠️ SOURCE UNREACHABLE: No matching records in archives.")
 # import streamlit as st
 # from prompt_detector import detect_prompt_injection
 # from llm_handler import get_ai_response
