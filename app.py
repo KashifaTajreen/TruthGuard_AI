@@ -4,39 +4,86 @@ from prompt_detector import detect_prompt_injection
 from llm_handler import get_ai_response
 from hallucination_checker import check_wikipedia, hallucination_score
 
-st.title("AI TruthGuard")
-st.subheader("Prompt Injection + Hallucination Detector")
 
-user_prompt = st.text_input("Ask a question")
+st.set_page_config(page_title="AI TruthGuard", layout="centered")
 
-if st.button("Analyze"):
+st.title("🛡 AI TruthGuard")
+st.caption("Prompt Injection + Hallucination Detection System")
 
-    attack, pattern = detect_prompt_injection(user_prompt)
+st.divider()
 
-    if attack:
+mode = st.radio(
+    "Select Mode",
+    ["Ask AI + Verify", "Verify External AI Response"]
+)
 
-        st.error("⚠ Prompt Injection Detected")
-        st.write("Pattern detected:", pattern)
+st.divider()
 
-    else:
+# MODE 1
+if mode == "Ask AI + Verify":
 
-        st.info("Prompt looks safe")
+    user_prompt = st.text_input("Ask a question")
 
-        ai_answer = get_ai_response(user_prompt)
+    if st.button("Analyze"):
 
-        st.subheader("AI Response")
-        st.write(ai_answer)
+        st.subheader("🔐 Prompt Injection Detector")
 
-        wiki_text = check_wikipedia(user_prompt)
+        attack, pattern = detect_prompt_injection(user_prompt)
+
+        if attack:
+
+            st.error("⚠ Prompt Injection Detected")
+            st.write("Pattern:", pattern)
+
+        else:
+
+            st.success("Prompt looks safe")
+
+            st.divider()
+
+            st.subheader("🤖 AI Response")
+
+            ai_answer = get_ai_response(user_prompt)
+
+            st.write(ai_answer)
+
+            st.divider()
+
+            st.subheader("🧠 Hallucination Detector")
+
+            wiki_text = check_wikipedia(user_prompt)
+
+            score = hallucination_score(ai_answer, wiki_text)
+
+            st.metric("Truth Score", str(score) + "%")
+
+            if score > 70:
+                st.success("Likely factual")
+            else:
+                st.warning("Possible hallucination")
+
+
+# MODE 2
+if mode == "Verify External AI Response":
+
+    topic = st.text_input("Topic / Question")
+
+    ai_answer = st.text_area(
+        "Paste response from ChatGPT, Gemini, or any AI"
+    )
+
+    if st.button("Verify Response"):
+
+        st.subheader("🧠 Hallucination Detector")
+
+        wiki_text = check_wikipedia(topic)
 
         score = hallucination_score(ai_answer, wiki_text)
 
-        st.subheader("Truth Score")
-
-        st.write(str(score) + "%")
+        st.metric("Truth Score", str(score) + "%")
 
         if score > 70:
-            st.success("Answer likely factual")
+            st.success("Likely factual")
 
         else:
             st.warning("Possible hallucination")
