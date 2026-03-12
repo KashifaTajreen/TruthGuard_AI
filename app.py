@@ -1,4 +1,3 @@
-
 import streamlit as st
 from prompt_detector import detect_prompt_injection
 from llm_handler import get_ai_response
