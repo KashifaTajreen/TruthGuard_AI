@@ -106,7 +106,7 @@ if mode == "Ask AI + Verify":
              st.subheader("📚 Evidence Source")
              st.write(wiki_data["source"])
 
-         else:
+        else:
 
                st.warning("No trusted source found for this claim.")
 
