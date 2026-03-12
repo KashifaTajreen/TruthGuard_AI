@@ -12,11 +12,13 @@ st.markdown("""
     .main { background-color: #000000; color: #00FF41; font-family: 'Courier New', Courier, monospace; }
     .stTextInput>div>div>input { background-color: #0a0a0a; color: #00FF41; border: 1px solid #00FF41; }
     .stButton>button { width: 100%; border-radius: 0px; background-color: #003300; color: #00FF41; border: 1px solid #00FF41; }
-    .stButton>button:hover { background-color: #00FF41; color: black; }
+    .stButton>button:hover { background-color: #00FF41 !important; color: black !important; }
     .stMetric { border: 1px solid #00FF41; padding: 10px; background: #051a05; }
-    h1, h2, h3 { color: #00FF41 !important; text-transform: uppercase; letter-spacing: 2px; }
+    h1, h2, h3, p, span { color: #00FF41 !important; font-family: 'Courier New', monospace; }
+    .stTabs [data-baseweb="tab-list"] { background-color: #000000; }
+    .stTabs [data-baseweb="tab"] { color: #00FF41; }
     </style>
-    """, unsafe_allow_密=True)
+    """, unsafe_allow_html=True) # FIXED THE PARAMETER HERE
 
 st.title("📂 PROTOCOL: TRUTHGUARD")
 st.caption("SECURE INTEL VERIFICATION SYSTEM // ENCRYPTION ACTIVE")
