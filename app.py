@@ -81,9 +81,9 @@ if mode == "Ask AI + Verify":
 
         try:
              with st.spinner("AI thinking..."):
-             ai_answer = get_ai_response(user_prompt)
+                 ai_answer = get_ai_response(user_prompt)
 
-             st.write(ai_answer)
+                 st.write(ai_answer)
 
         except Exception as e:
              st.error("AI response failed. Check GROQ API key.")
