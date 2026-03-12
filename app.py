@@ -77,47 +77,79 @@ if mode == "Ask AI + Verify":
             st.divider()
 
             st.subheader("🤖 AI Response")
+            ai_answer = None
 
-            try:
+        try:
+             with st.spinner("AI thinking..."):
+             ai_answer = get_ai_response(user_prompt)
 
-                with st.spinner("AI thinking..."):
-                    ai_answer = get_ai_response(user_prompt)
+             st.write(ai_answer)
 
-                st.write(ai_answer)
+        except Exception as e:
+             st.error("AI response failed. Check GROQ API key.")
 
-            except:
-                st.error("AI response failed. Check GROQ API key.")
-                ai_answer = ""
+# Only verify if answer exists
+        if ai_answer:
 
-            st.divider()
+              st.divider()
+              st.subheader("🧠 Hallucination Detector")
 
-            st.subheader("🧠 Hallucination Detector")
+              wiki_data = check_wikipedia(user_prompt)
 
-            wiki_data = check_wikipedia(user_prompt)
+        if wiki_data:
 
-            if wiki_data:
+             score = hallucination_score(ai_answer, wiki_data["text"])
 
-                score = hallucination_score(ai_answer, wiki_data["text"])
+             st.metric("Truth Score", str(score) + "%")
+             st.progress(score/100)
 
-                st.metric("Truth Score", str(score) + "%")
-                st.progress(score/100)
+             st.subheader("📚 Evidence Source")
+             st.write(wiki_data["source"])
 
-                if score > 70:
-                    st.success("Likely factual")
-                else:
-                    st.warning("Possible hallucination")
+         else:
 
-                st.subheader("📚 Source")
-                st.write(wiki_data["source"])
+               st.warning("No trusted source found for this claim.")
 
-            else:
+            # try:
 
-                score = 30
+            #     with st.spinner("AI thinking..."):
+            #         ai_answer = get_ai_response(user_prompt)
 
-                st.metric("Truth Score", str(score) + "%")
-                st.progress(score/100)
+            #     st.write(ai_answer)
 
-                st.warning("No trusted source found")
+            # except:
+            #     st.error("AI response failed. Check GROQ API key.")
+            #     ai_answer = ""
+
+            # st.divider()
+
+            # st.subheader("🧠 Hallucination Detector")
+
+            # wiki_data = check_wikipedia(user_prompt)
+
+            # if wiki_data:
+
+            #     score = hallucination_score(ai_answer, wiki_data["text"])
+
+            #     st.metric("Truth Score", str(score) + "%")
+            #     st.progress(score/100)
+
+            #     if score > 70:
+            #         st.success("Likely factual")
+            #     else:
+            #         st.warning("Possible hallucination")
+
+            #     st.subheader("📚 Source")
+            #     st.write(wiki_data["source"])
+
+            # else:
+
+            #     score = 30
+
+            #     st.metric("Truth Score", str(score) + "%")
+            #     st.progress(score/100)
+
+            #     st.warning("No trusted source found")
 
 
 
