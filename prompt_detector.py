@@ -1,13 +1,15 @@
 # prompt_detector.py
-
+import re
 dangerous_patterns = [
-    "ignore previous instructions",
-    "reveal system prompt",
-    "show hidden instructions",
-    "give me api key",
-    "bypass safety",
-    "pretend you are not an ai",
-    "jailbreak",
+     r"ignore previous instructions",
+     r"reveal system prompt",
+     r"show hidden instructions",
+     r"give me api key",
+     r"bypass safety",
+     r"pretend you are not an ai",
+    r"jailbreak",
+    r"act as system",
+    r"reveal hidden prompt"
 ]
 
 def detect_prompt_injection(prompt):
