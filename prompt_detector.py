@@ -14,10 +14,17 @@ dangerous_patterns = [
 ]
 
 def detect_prompt_injection(prompt):
-    for pattern in dangerous_patterns:
-        if re.search(pattern, prompt, re.IGNORECASE):
-            return True, pattern
+     p = prompt.lower()
+    # Check for keywords even if words are between them
+    if "ignore" in p and "instruction" in p:
+        return True, "Instruction Override Attempt"
+    if "secret" in p or "system prompt" in p:
+        return True, "Data Leak Attempt"
     return False, None
+    # for pattern in dangerous_patterns:
+    #     if re.search(pattern, prompt, re.IGNORECASE):
+    #         return True, pattern
+    # return False, None
 # import re
 # dangerous_patterns = [
 #      r"ignore previous instructions",
