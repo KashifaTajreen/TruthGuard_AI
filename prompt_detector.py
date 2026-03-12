@@ -1,26 +1,26 @@
 # prompt_detector.py
-import re
+# import re
 
-dangerous_patterns = [
-    r"ignore (all|previous) instructions",
-    r"system prompt",
-    r"as a (dev|developer|admin)",
-    r"reveal secret",
-    r"bypass",
-    r"jailbreak",
-    r"sql injection",
-    r"<script>",
-    r"decode this base64"
-]
+# dangerous_patterns = [
+#     r"ignore (all|previous) instructions",
+#     r"system prompt",
+#     r"as a (dev|developer|admin)",
+#     r"reveal secret",
+#     r"bypass",
+#     r"jailbreak",
+#     r"sql injection",
+#     r"<script>",
+#     r"decode this base64"
+# ]
 
-def detect_prompt_injection(prompt):
-     p = prompt.lower()
-    # Check for keywords even if words are between them
-    if "ignore" in p and "instruction" in p:
-        return True, "Instruction Override Attempt"
-    if "secret" in p or "system prompt" in p:
-        return True, "Data Leak Attempt"
-    return False, None
+# def detect_prompt_injection(prompt):
+#      p = prompt.lower()
+#     # Check for keywords even if words are between them
+#     if "ignore" in p and "instruction" in p:
+#         return True, "Instruction Override Attempt"
+#     if "secret" in p or "system prompt" in p:
+#         return True, "Data Leak Attempt"
+#     return False, None
     # for pattern in dangerous_patterns:
     #     if re.search(pattern, prompt, re.IGNORECASE):
     #         return True, pattern
