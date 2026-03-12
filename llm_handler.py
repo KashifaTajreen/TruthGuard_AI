@@ -1,16 +1,16 @@
-# llm_handler.py
-
-import os
 from openai import OpenAI
+import os
 
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+client = OpenAI(
+    base_url="https://api.groq.com/openai/v1",
+    api_key=os.getenv("GROQ_API_KEY")
+)
 
 def get_ai_response(prompt):
 
     response = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="llama3-8b-8192",
         messages=[
-            {"role": "system", "content": "You are a helpful assistant providing factual answers."},
             {"role": "user", "content": prompt}
         ]
     )
