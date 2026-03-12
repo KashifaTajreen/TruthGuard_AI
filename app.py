@@ -109,24 +109,31 @@ if mode == "Verify External AI Response":
 
         st.subheader("🧠 Hallucination Detector")
 
-        wiki_text = check_wikipedia(topic)
+        # wiki_text = check_wikipedia(topic)
 
-        score = hallucination_score(ai_answer, wiki_text)
+        # score = hallucination_score(ai_answer, wiki_text)
 
-        st.metric("Truth Score", str(score) + "%")
+        # st.metric("Truth Score", str(score) + "%")
+        wiki_data = check_wikipedia(user_prompt)
+
+        score = hallucination_score(ai_answer, wiki_data["text"])
+
+        st.metric("Truth Score", str(score)+"%")
+
 
         if score > 70:
             st.success("Likely factual")
 
         else:
             st.warning("Possible hallucination")
+            
+        st.subheader("Source")
 
-wiki_data = check_wikipedia(user_prompt)
+        st.write(wiki_data["source"])
 
-score = hallucination_score(ai_answer, wiki_data["text"])
 
-st.metric("Truth Score", str(score)+"%")
 
-st.subheader("Source")
 
-st.write(wiki_data["source"])
+# st.subheader("Source")
+
+# st.write(wiki_data["source"])
