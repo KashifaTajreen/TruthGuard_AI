@@ -3,3 +3,4 @@ openai
 requests
 sentence-transformers
 scikit-learn
+groq
