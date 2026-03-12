@@ -4,6 +4,35 @@ from prompt_detector import detect_prompt_injection
 from llm_handler import get_ai_response
 from hallucination_checker import check_wikipedia, hallucination_score
 
+st.markdown("""
+<style>
+
+.stApp {
+    background: linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+}
+
+button {
+    background: #22c55e;
+    border-radius:10px;
+    padding:10px 20px;
+    transition:0.3s;
+}
+
+button:hover {
+    background:#16a34a;
+    transform:scale(1.05);
+}
+
+div[data-testid="stMetric"] {
+    background:#111827;
+    padding:20px;
+    border-radius:10px;
+}
+
+</style>
+""", unsafe_allow_html=True)
+
 
 st.set_page_config(page_title="AI TruthGuard", layout="centered")
 
