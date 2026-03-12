@@ -2,16 +2,36 @@
 
 import requests
 
+# def check_wikipedia(query):
+
+#     url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + query
+
+#     try:
+#         response = requests.get(url)
+
+#         if response.status_code == 200:
+#             data = response.json()
+#             return data.get("extract", "")
+
+#     except:
+#         return None
+
+import requests
+
 def check_wikipedia(query):
 
     url = "https://en.wikipedia.org/api/rest_v1/page/summary/" + query
 
     try:
-        response = requests.get(url)
+        r = requests.get(url)
 
-        if response.status_code == 200:
-            data = response.json()
-            return data.get("extract", "")
+        if r.status_code == 200:
+            data = r.json()
+
+            return {
+                "text": data.get("extract"),
+                "source": data.get("content_urls",{}).get("desktop",{}).get("page")
+            }
 
     except:
         return None
@@ -30,3 +50,4 @@ def hallucination_score(ai_answer, wiki_text):
     score = len(overlap) / max(len(ai_words), 1)
 
     return round(score * 100)
+    
