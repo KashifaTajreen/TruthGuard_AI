@@ -62,9 +62,9 @@ if mode == "Ask AI + Verify":
             else:
                 st.warning("Possible hallucination")
 
-if wiki_text:
-    st.subheader("Source")
-    st.write("Wikipedia")
+            if wiki_text:
+               st.subheader("Source")
+               st.write("Wikipedia")
 
 
 # MODE 2
