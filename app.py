@@ -4,8 +4,9 @@ from llm_handler import get_ai_response
 from hallucination_checker import check_real_time, hallucination_score
 import time
 
-st.set_page_config(page_title="TRUTHGUARD AI", layout="wide")
+st.set_page_config(page_title="TRUTHGUARD OS", layout="wide")
 
+# Modern Cyber UI
 st.markdown("""
     <style>
     .stApp { background: radial-gradient(circle at top right, #001a1a, #000000); color: #e0e0e0; }
@@ -13,59 +14,89 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
         border: 1px solid rgba(0, 255, 65, 0.2); border-radius: 15px; padding: 20px;
     }
-    .stButton>button {
-        background: linear-gradient(45deg, #004d00, #00cc00); color: white; 
-        border: none; border-radius: 8px; font-weight: bold; width: 100%;
-    }
-    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
-        background: rgba(0,0,0,0.5); border: 1px solid #00ff41; color: #00ff41;
-    }
-    h1, h2 { text-shadow: 0 0 10px #00ff41; color: #00ff41 !important; }
+    .stButton>button { background: linear-gradient(45deg, #004d00, #00cc00); color: white; border-radius: 8px; font-weight: bold; width: 100%; }
+    .stTextInput>div>div>input { background: rgba(0,0,0,0.5); border: 1px solid #00ff41; color: #00ff41; }
+    h1 { text-shadow: 0 0 10px #00ff41; color: #00ff41 !important; }
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🛡️ TRUTHGUARD AI")
-st.write("SECURE AI GATEWAY // NEURAL DEFENSE ACTIVE")
+st.title("🛡️ TRUTHGUARD OS")
+st.caption("SINGLE-ENGINE INTELLIGENCE GATEWAY (TAVILY POWERED)")
 
-tabs = st.tabs(["[ SHADOW SCAN ]", "[ EXTERNAL AUDIT ]"])
-# --- TAB 1: SHADOW SCAN ---
-with tabs[0]:
-    query = st.text_input("ENTER INTEL QUERY:", placeholder="e.g. Current status of Galgotias University AI Summit 2026", key="shadow_q")
-    if st.button("EXECUTE SYSTEM SCAN"):
-        if query:
-            is_attack, pattern = detect_prompt_injection(query)
-            if is_attack:
-                st.error(f"❌ SECURITY BREACH: {pattern.upper()} DETECTED")
-            else:
-                st.success("✅ PROMPT CLEARANCE GRANTED")
-                
-                with st.spinner("FETCHING REAL-TIME ARCHIVES..."):
-                    real_data = check_real_time(query)
-                
-                with st.spinner("QUERYING LLM..."):
-                    context = real_data['text'] if real_data else "No live web source found."
-                    response = get_ai_response(f"Ref context: {context}. User Query: {query}")
-                
-                st.markdown("### 📡 SYSTEM OUTPUT")
-                if "ERROR" in response:
-                    st.error(response)
-                else:
-                    st.info(response)
-                
-                # UPDATED SOURCE DISPLAY FOR SHADOW SCAN
+t1, t2 = st.tabs(["[ SHADOW SCAN ]", "[ EXTERNAL AUDIT ]"])
+
+with t1:
+    query = st.text_input("ENTER QUERY:", key="main_q")
+    if st.button("EXECUTE SCAN"):
+        is_attack, pattern = detect_prompt_injection(query)
+        if is_attack:
+            st.error(f"❌ SECURITY BREACH: {pattern.upper()} DETECTED")
+        else:
+            st.success("✅ PROMPT SECURE")
+            with st.spinner("FETCHING REAL-TIME INTEL..."):
+                # Use Tavily for the answer and the sources
+                real_data = check_real_time(query)
+                ai_response = get_ai_response(query)
+            
+            st.subheader("📡 SYSTEM OUTPUT")
+            st.info(ai_response)
+            
+            if real_data and "ERROR" not in ai_response:
+                score = hallucination_score(ai_response, real_data['text'])
+                st.subheader("📊 CREDIBILITY ANALYSIS")
+                c1, c2 = st.columns(2)
+                c1.metric("TRUTH INDEX", f"{score}%")
+                with c2:
+                    st.write("**SOURCES:**")
+                    for s in real_data['sources']:
+                        st.markdown(f"✅ [{s['title']}]({s['url']})")
+
+with t2:
+    st.subheader("AUDIT EXTERNAL TEXT")
+    topic = st.text_input("TOPIC:")
+    text = st.text_area("PASTE TEXT:")
+    if st.button("RUN AUDIT"):
+        if topic and text:
+            with st.spinner("VETTING..."):
+                real_data = check_real_time(topic)
                 if real_data:
-                    score = hallucination_score(response, real_data['text'])
-                    st.subheader("📊 CREDIBILITY ANALYSIS")
-                    c1, c2 = st.columns(2)
-                    c1.metric("TRUTH INDEX", f"{score}%")
-                    
-                    with c2:
-                        st.write("**VERIFIED SOURCES:**")
-                        for source in real_data['sources']:
-                            # Shows: ✅ Wikipedia (with link)
-                            st.markdown(f"✅ [{source['title']}]({source['url']})")
+                    score = hallucination_score(text, real_data['text'])
+                    st.metric("TRUTH INDEX", f"{score}%")
+                    for s in real_data['sources']:
+                        st.markdown(f"✅ [{s['title']}]({s['url']})")
+# import streamlit as st
+# from prompt_detector import detect_prompt_injection
+# from llm_handler import get_ai_response
+# from hallucination_checker import check_real_time, hallucination_score
+# import time
+
+# st.set_page_config(page_title="TRUTHGUARD AI", layout="wide")
+
+# st.markdown("""
+#     <style>
+#     .stApp { background: radial-gradient(circle at top right, #001a1a, #000000); color: #e0e0e0; }
+#     div[data-testid="stVerticalBlock"] > div:has(div.stMetric) {
+#         background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px);
+#         border: 1px solid rgba(0, 255, 65, 0.2); border-radius: 15px; padding: 20px;
+#     }
+#     .stButton>button {
+#         background: linear-gradient(45deg, #004d00, #00cc00); color: white; 
+#         border: none; border-radius: 8px; font-weight: bold; width: 100%;
+#     }
+#     .stTextInput>div>div>input, .stTextArea>div>div>textarea {
+#         background: rgba(0,0,0,0.5); border: 1px solid #00ff41; color: #00ff41;
+#     }
+#     h1, h2 { text-shadow: 0 0 10px #00ff41; color: #00ff41 !important; }
+#     </style>
+#     """, unsafe_allow_html=True)
+
+# st.title("🛡️ TRUTHGUARD AI")
+# st.write("SECURE AI GATEWAY // NEURAL DEFENSE ACTIVE")
+
+# tabs = st.tabs(["[ SHADOW SCAN ]", "[ EXTERNAL AUDIT ]"])
+# # --- TAB 1: SHADOW SCAN ---
 # with tabs[0]:
-#     query = st.text_input("ENTER INTEL QUERY:", placeholder="e.g. Current status of Galgotias University AI Summit 2026")
+#     query = st.text_input("ENTER INTEL QUERY:", placeholder="e.g. Current status of Galgotias University AI Summit 2026", key="shadow_q")
 #     if st.button("EXECUTE SYSTEM SCAN"):
 #         if query:
 #             is_attack, pattern = detect_prompt_injection(query)
@@ -73,43 +104,54 @@ with tabs[0]:
 #                 st.error(f"❌ SECURITY BREACH: {pattern.upper()} DETECTED")
 #             else:
 #                 st.success("✅ PROMPT CLEARANCE GRANTED")
+                
 #                 with st.spinner("FETCHING REAL-TIME ARCHIVES..."):
 #                     real_data = check_real_time(query)
+                
 #                 with st.spinner("QUERYING LLM..."):
-#                     context = real_data['text'] if real_data else "No source found."
-#                     response = get_ai_response(f"Ref: {context}. Query: {query}")
+#                     context = real_data['text'] if real_data else "No live web source found."
+#                     response = get_ai_response(f"Ref context: {context}. User Query: {query}")
                 
 #                 st.markdown("### 📡 SYSTEM OUTPUT")
-#                 st.info(response)
+#                 if "ERROR" in response:
+#                     st.error(response)
+#                 else:
+#                     st.info(response)
                 
+#                 # UPDATED SOURCE DISPLAY FOR SHADOW SCAN
 #                 if real_data:
 #                     score = hallucination_score(response, real_data['text'])
 #                     st.subheader("📊 CREDIBILITY ANALYSIS")
 #                     c1, c2 = st.columns(2)
 #                     c1.metric("TRUTH INDEX", f"{score}%")
-#                     c2.write("**VERIFIED SOURCES:**")
-#                     for url in real_data['sources']: st.write(f"- [Source Link]({url})")
+                    
+#                     with c2:
+#                         st.write("**VERIFIED SOURCES:**")
+#                         for source in real_data['sources']:
+#                             # Shows: ✅ Wikipedia (with link)
+#                             st.markdown(f"✅ [{source['title']}]({source['url']})")
 
-# --- TAB 2: EXTERNAL AUDIT (PASTED TEXT) ---
-with tabs[1]:
-    st.subheader("VET EXTERNAL AI CONTENT")
-    audit_topic = st.text_input("TOPIC (for source search):")
-    audit_text = st.text_area("PASTE TEXT (from ChatGPT/Gemini):", height=200)
+
+# # --- TAB 2: EXTERNAL AUDIT (PASTED TEXT) ---
+# with tabs[1]:
+#     st.subheader("VET EXTERNAL AI CONTENT")
+#     audit_topic = st.text_input("TOPIC (for source search):")
+#     audit_text = st.text_area("PASTE TEXT (from ChatGPT/Gemini):", height=200)
     
-    if st.button("RUN AUDIT"):
-        if audit_topic and audit_text:
-            with st.spinner("VETTING AGAINST LIVE WEB..."):
-                # Use same search engine as Tab 1
-                real_data = check_real_time(audit_topic)
-                if real_data:
-                      score = hallucination_score(response if 'response' in locals() else audit_text, real_data['text'])
-                      st.subheader("📊 CREDIBILITY ANALYSIS")
-                      c1, c2 = st.columns(2)
-                      c1.metric("TRUTH INDEX", f"{score}%")
+#     if st.button("RUN AUDIT"):
+#         if audit_topic and audit_text:
+#             with st.spinner("VETTING AGAINST LIVE WEB..."):
+#                 # Use same search engine as Tab 1
+#                 real_data = check_real_time(audit_topic)
+#                 if real_data:
+#                       score = hallucination_score(response if 'response' in locals() else audit_text, real_data['text'])
+#                       st.subheader("📊 CREDIBILITY ANALYSIS")
+#                       c1, c2 = st.columns(2)
+#                       c1.metric("TRUTH INDEX", f"{score}%")
     
-                      with c2:
-                              st.write("**VERIFIED SOURCES:**")
-                              for source in real_data['sources']:
-                            # This creates: Wikipedia (clickable link)
-                                   st.markdown(f"✅ [{source['title']}]({source['url']})")
+#                       with c2:
+#                               st.write("**VERIFIED SOURCES:**")
+#                               for source in real_data['sources']:
+#                             # This creates: Wikipedia (clickable link)
+#                                    st.markdown(f"✅ [{source['title']}]({source['url']})")
                 
