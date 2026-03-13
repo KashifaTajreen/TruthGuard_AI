@@ -6,7 +6,6 @@ import time
 
 st.set_page_config(page_title="TRUTHGUARD AI", layout="wide")
 
-# MODERN CYBER-GLASS UI
 st.markdown("""
     <style>
     .stApp { background: radial-gradient(circle at top right, #001a1a, #000000); color: #e0e0e0; }
@@ -68,7 +67,6 @@ with tabs[1]:
             with st.spinner("VETTING AGAINST LIVE WEB..."):
                 # Use same search engine as Tab 1
                 real_data = check_real_time(audit_topic)
-                # Replace your existing metrics/sources display with this clean version:
                 if real_data:
                       score = hallucination_score(response if 'response' in locals() else audit_text, real_data['text'])
                       st.subheader("📊 CREDIBILITY ANALYSIS")
