@@ -33,11 +33,11 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🛡️ TRUTHGUARD OS")
+st.title("🛡️ TRUTHGUARD AI")
 st.write("REAL-TIME AI VETTING // NEURAL DEFENSE ACTIVE")
 
 # Main Interface
-query = st.text_input("ENTER INTEL QUERY:", placeholder="e.g. What happened at Galgotias University in 2026?")
+query = st.text_input("ENTER INTEL QUERY:", placeholder="e.g. What is happening in 2026?")
 
 if st.button("EXECUTE SCAN"):
     if query:
@@ -58,7 +58,7 @@ if st.button("EXECUTE SCAN"):
                 context_prompt = f"Using this verified data: {real_data['text'] if real_data else 'None'}. Answer: {query}"
                 response = get_ai_response(context_prompt)
             
-            st.markdown("### 📡 SYSTEM OUTPUT")
+            st.markdown("### 📡AI Response")
             st.info(response)
             
             # 4. Score Calculation
