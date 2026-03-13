@@ -25,7 +25,7 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🛡️ TRUTHGUARD OS")
+st.title("🛡️ TRUTHGUARD AI")
 st.write("SECURE AI GATEWAY // NEURAL DEFENSE ACTIVE")
 
 tabs = st.tabs(["[ SHADOW SCAN ]", "[ EXTERNAL AUDIT ]"])
