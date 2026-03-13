@@ -68,14 +68,26 @@ with tabs[1]:
             with st.spinner("VETTING AGAINST LIVE WEB..."):
                 # Use same search engine as Tab 1
                 real_data = check_real_time(audit_topic)
+                # Replace your existing metrics/sources display with this clean version:
                 if real_data:
-                    score = hallucination_score(audit_text, real_data['text'])
-                    st.metric("EXTERNAL TRUTH INDEX", f"{score}%")
-                    st.progress(score/100)
-                    st.write("**VERIFIED SOURCES FOUND:**")
-                    for url in real_data['sources']: st.write(f"- [Reference]({url})")
-                else:
-                    st.error("COULD NOT FIND LIVE SOURCES FOR THIS TOPIC.")
+                      score = hallucination_score(response if 'response' in locals() else audit_text, real_data['text'])
+                      st.subheader("📊 CREDIBILITY ANALYSIS")
+                      c1, c2 = st.columns(2)
+                      c1.metric("TRUTH INDEX", f"{score}%")
+    
+                          with c2:
+                              st.write("**VERIFIED SOURCES:**")
+                              for source in real_data['sources']:
+                            # This creates: Wikipedia (clickable link)
+                                   st.markdown(f"✅ [{source['title']}]({source['url']})")
+                # if real_data:
+                #     score = hallucination_score(audit_text, real_data['text'])
+                #     st.metric("EXTERNAL TRUTH INDEX", f"{score}%")
+                #     st.progress(score/100)
+                #     st.write("**VERIFIED SOURCES FOUND:**")
+                #     for url in real_data['sources']: st.write(f"- [Reference]({url})")
+                # else:
+                #     st.error("COULD NOT FIND LIVE SOURCES FOR THIS TOPIC.")
 # import streamlit as st
 # from prompt_detector import detect_prompt_injection
 # from llm_handler import get_ai_response
