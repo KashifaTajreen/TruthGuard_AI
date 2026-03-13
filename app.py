@@ -73,12 +73,12 @@ with t2:
                        st.subheader("📊 CREDIBILITY ANALYSIS")
                        col_a, col_b = st.columns(2)
     
-                      with col_a:
+                       with col_a:
                             display_score(score) # This calls the red/green logic
                             if score < 50:
                                   st.warning("⚠️ WARNING: High risk of hallucination detected.")
             
-                     with col_b:
+                      with col_b:
                              st.write("*VERIFIED SOURCES:*")
                              for s in real_data['sources']:
                                  st.markdown(f"✅ [{s['title']}]({s['url']})")
