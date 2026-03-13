@@ -28,10 +28,9 @@ st.title("🛡️ TRUTHGUARD AI")
 st.write("SECURE AI GATEWAY // NEURAL DEFENSE ACTIVE")
 
 tabs = st.tabs(["[ SHADOW SCAN ]", "[ EXTERNAL AUDIT ]"])
-
 # --- TAB 1: SHADOW SCAN ---
 with tabs[0]:
-    query = st.text_input("ENTER INTEL QUERY:", placeholder="e.g. Current status of Galgotias University AI Summit 2026")
+    query = st.text_input("ENTER INTEL QUERY:", placeholder="e.g. Current status of Galgotias University AI Summit 2026", key="shadow_q")
     if st.button("EXECUTE SYSTEM SCAN"):
         if query:
             is_attack, pattern = detect_prompt_injection(query)
@@ -39,22 +38,57 @@ with tabs[0]:
                 st.error(f"❌ SECURITY BREACH: {pattern.upper()} DETECTED")
             else:
                 st.success("✅ PROMPT CLEARANCE GRANTED")
+                
                 with st.spinner("FETCHING REAL-TIME ARCHIVES..."):
                     real_data = check_real_time(query)
+                
                 with st.spinner("QUERYING LLM..."):
-                    context = real_data['text'] if real_data else "No source found."
-                    response = get_ai_response(f"Ref: {context}. Query: {query}")
+                    context = real_data['text'] if real_data else "No live web source found."
+                    response = get_ai_response(f"Ref context: {context}. User Query: {query}")
                 
                 st.markdown("### 📡 SYSTEM OUTPUT")
-                st.info(response)
+                if "ERROR" in response:
+                    st.error(response)
+                else:
+                    st.info(response)
                 
+                # UPDATED SOURCE DISPLAY FOR SHADOW SCAN
                 if real_data:
                     score = hallucination_score(response, real_data['text'])
                     st.subheader("📊 CREDIBILITY ANALYSIS")
                     c1, c2 = st.columns(2)
                     c1.metric("TRUTH INDEX", f"{score}%")
-                    c2.write("**VERIFIED SOURCES:**")
-                    for url in real_data['sources']: st.write(f"- [Source Link]({url})")
+                    
+                    with c2:
+                        st.write("**VERIFIED SOURCES:**")
+                        for source in real_data['sources']:
+                            # Shows: ✅ Wikipedia (with link)
+                            st.markdown(f"✅ [{source['title']}]({source['url']})")
+# with tabs[0]:
+#     query = st.text_input("ENTER INTEL QUERY:", placeholder="e.g. Current status of Galgotias University AI Summit 2026")
+#     if st.button("EXECUTE SYSTEM SCAN"):
+#         if query:
+#             is_attack, pattern = detect_prompt_injection(query)
+#             if is_attack:
+#                 st.error(f"❌ SECURITY BREACH: {pattern.upper()} DETECTED")
+#             else:
+#                 st.success("✅ PROMPT CLEARANCE GRANTED")
+#                 with st.spinner("FETCHING REAL-TIME ARCHIVES..."):
+#                     real_data = check_real_time(query)
+#                 with st.spinner("QUERYING LLM..."):
+#                     context = real_data['text'] if real_data else "No source found."
+#                     response = get_ai_response(f"Ref: {context}. Query: {query}")
+                
+#                 st.markdown("### 📡 SYSTEM OUTPUT")
+#                 st.info(response)
+                
+#                 if real_data:
+#                     score = hallucination_score(response, real_data['text'])
+#                     st.subheader("📊 CREDIBILITY ANALYSIS")
+#                     c1, c2 = st.columns(2)
+#                     c1.metric("TRUTH INDEX", f"{score}%")
+#                     c2.write("**VERIFIED SOURCES:**")
+#                     for url in real_data['sources']: st.write(f"- [Source Link]({url})")
 
 # --- TAB 2: EXTERNAL AUDIT (PASTED TEXT) ---
 with tabs[1]:
