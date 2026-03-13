@@ -3,95 +3,41 @@ from groq import Groq
 
 def get_ai_response(prompt):
     try:
-        api_key = st.secrets["TAVILY_API_KEY"]
+        # Check if key exists before calling
+        if "GROQ_API_KEY" not in st.secrets:
+            return "ERROR: GROQ_API_KEY MISSING IN SECRETS"
+            
+        api_key = st.secrets["GROQ_API_KEY"]
         client = Groq(api_key=api_key)
         
         completion = client.chat.completions.create(
-            model="llama-3.1-8b-instant", # The most stable Groq model right now
+            model="llama-3.1-8b-instant",
             messages=[
-                {"role": "system", "content": "You are a top-secret intelligence AI. Give short, factual answers."},
+                {"role": "system", "content": "You are a secure intel AI. Use provided context to answer query concisely."},
                 {"role": "user", "content": prompt}
             ],
-            temperature=0.1
+            temperature=0.2
         )
         return completion.choices[0].message.content
     except Exception as e:
-        return f"ERROR: SYSTEM FAILURE - {str(e)}"
+        # Returns the specific error to help you debug during the demo
+        return f"ERROR: SYSTEM FAILURE - {str(e)[:50]}"
 # import streamlit as st
 # from groq import Groq
 
 # def get_ai_response(prompt):
 #     try:
-#         # Pull key from Streamlit Secrets
-#         api_key = st.secrets["GROQ_API_KEY"]
+#         api_key = st.secrets["TAVILY_API_KEY"]
 #         client = Groq(api_key=api_key)
         
-#         response = client.chat.completions.create(
-#             model="llama-3.1-8b-instant",
-#             messages=[
-#                 {"role": "system", "content": "You are a professional Intelligence Officer. Provide strictly factual, concise, and structured intel reports. No small talk."},
-#                 {"role": "user", "content": prompt}
-#             ],
-#             temperature=0.1, # Keep it professional and factual
-#             max_tokens=800
-#         )
-#         return response.choices[0].message.content
-#     except Exception as e:
-#         return f"SYSTEM ERROR: API_CONNECTION_FAILED - {str(e)}"
-# import streamlit as st
-# from groq import Groq
-
-# def get_ai_response(prompt):
-#     """
-#     Fetches response from Groq using Streamlit Secrets.
-#     """
-#     # Pulling API Key from Streamlit Secrets
-#     try:
-#         api_key = st.secrets["GROQ_API_KEY"]
-#     except KeyError:
-#         return "ERROR: GROQ_API_KEY NOT FOUND IN SECRETS."
-
-#     try:
-#         # Initializing official Groq client
-#         client = Groq(api_key=api_key)
-        
-#         # Creating completion with Llama 3
 #         completion = client.chat.completions.create(
-#             model="llama-3.1-8b-instant",
+#             model="llama-3.1-8b-instant", # The most stable Groq model right now
 #             messages=[
-#                 {"role": "system", "content": "You are a secure intelligence AI. Provide concise, professional intel."},
+#                 {"role": "system", "content": "You are a top-secret intelligence AI. Give short, factual answers."},
 #                 {"role": "user", "content": prompt}
 #             ],
-#             temperature=0.3, # Lower temperature for less hallucination
-#             max_tokens=1024
+#             temperature=0.1
 #         )
-        
 #         return completion.choices[0].message.content
-
 #     except Exception as e:
-#         # Professional error handling for the spy UI
-#         return f"ERROR: ENCRYPTION FAILURE OR API OFFLINE - {str(e)}"
-# from openai import OpenAI
-# import os
-
-# api_key = os.getenv("GROQ_API_KEY")
-
-# client = OpenAI(
-#     base_url="https://api.groq.com/openai/v1",
-#     api_key=api_key
-# )
-
-# def get_ai_response(prompt):
-
-#     if not api_key:
-#         return "API key missing."
-
-#     response = client.chat.completions.create(
-#         model="llama3-8b-8192",
-#         messages=[
-#             {"role": "user", "content": prompt}
-#         ]
-#     )
-
-#     return response.choices[0].message.content
-
+#         return f"ERROR: SYSTEM FAILURE - {str(e)}"
