@@ -4,7 +4,7 @@ from llm_handler import get_ai_response
 from hallucination_checker import check_real_time, hallucination_score
 import time
 
-st.set_page_config(page_title="TRUTHGUARD OS", layout="wide")
+st.set_page_config(page_title="TRUTHGUARD AI", layout="wide")
 
 # Modern Cyber UI
 st.markdown("""
@@ -20,8 +20,8 @@ st.markdown("""
     </style>
     """, unsafe_allow_html=True)
 
-st.title("🛡️ TRUTHGUARD OS")
-st.caption("SINGLE-ENGINE INTELLIGENCE GATEWAY (TAVILY POWERED)")
+st.title("🛡️ TRUTHGUARD AI")
+st.caption("PROMPT INJECTION FIREWALL & HALLUCINATION DETECTOR")
 
 t1, t2 = st.tabs(["[ SHADOW SCAN ]", "[ EXTERNAL AUDIT ]"])
 
