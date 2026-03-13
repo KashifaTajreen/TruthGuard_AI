@@ -78,7 +78,7 @@ with t2:
                             if score < 50:
                                   st.warning("⚠️ WARNING: High risk of hallucination detected.")
             
-                      with col_b:
+                       with col_b:
                              st.write("*VERIFIED SOURCES:*")
                              for s in real_data['sources']:
                                  st.markdown(f"✅ [{s['title']}]({s['url']})")
