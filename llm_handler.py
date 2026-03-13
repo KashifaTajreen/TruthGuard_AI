@@ -3,7 +3,7 @@ from groq import Groq
 
 def get_ai_response(prompt):
     try:
-        api_key = st.secrets["GROQ_API_KEY"]
+        api_key = st.secrets["TAVILY_API_KEY"]
         client = Groq(api_key=api_key)
         
         completion = client.chat.completions.create(
