@@ -23,6 +23,15 @@ st.markdown("""
 st.title("🛡️ TRUTHGUARD AI")
 st.caption("PROMPT INJECTION FIREWALL & HALLUCINATION DETECTOR")
 
+def display_score(score):
+    color = "#FF4B4B" if score < 50 else "#00FF41" # Red if < 50, Green if >= 50
+    st.markdown(f"""
+        <div style="padding:15px; border:2px solid {color}; border-radius:10px; background:rgba(0,0,0,0.5);">
+            <p style="color:white; margin:0;">TRUTH INDEX</p>
+            <h2 style="color:{color}; margin:0;">{score}%</h2>
+        </div>
+    """, unsafe_allow_html=True)
+
 t1, t2 = st.tabs(["[ SHADOW SCAN ]", "[ EXTERNAL AUDIT ]"])
 
 with t1:
@@ -60,10 +69,25 @@ with t2:
             with st.spinner("VETTING..."):
                 real_data = check_real_time(topic)
                 if real_data:
-                    score = hallucination_score(text, real_data['text'])
-                    st.metric("TRUTH INDEX", f"{score}%")
-                    for s in real_data['sources']:
-                        st.markdown(f"✅ [{s['title']}]({s['url']})")
+                       score = hallucination_score(ai_response, real_data['text'])
+                       st.subheader("📊 CREDIBILITY ANALYSIS")
+                       col_a, col_b = st.columns(2)
+    
+                      with col_a:
+                            display_score(score) # This calls the red/green logic
+                            if score < 50:
+                                  st.warning("⚠️ WARNING: High risk of hallucination detected.")
+            
+                     with col_b:
+                             st.write("*VERIFIED SOURCES:*")
+                             for s in real_data['sources']:
+                                 st.markdown(f"✅ [{s['title']}]({s['url']})")
+                # if real_data:
+                #     score = hallucination_score(text, real_data['text'])
+                #     st.metric("TRUTH INDEX", f"{score}%")
+                #     for s in real_data['sources']:
+                #         st.markdown(f"✅ [{s['title']}]({s['url']})")
+
 # import streamlit as st
 # from prompt_detector import detect_prompt_injection
 # from llm_handler import get_ai_response
