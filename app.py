@@ -75,7 +75,7 @@ with tabs[1]:
                       c1, c2 = st.columns(2)
                       c1.metric("TRUTH INDEX", f"{score}%")
     
-                          with c2:
+                      with c2:
                               st.write("**VERIFIED SOURCES:**")
                               for source in real_data['sources']:
                             # This creates: Wikipedia (clickable link)
