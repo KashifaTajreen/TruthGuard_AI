@@ -3,84 +3,34 @@ import re
 
 def detect_prompt_injection(prompt):
     p = prompt.lower()
-    
-    # Advanced logic: looks for keywords even if words are inserted between them
+    # Advanced patterns to catch "Forget instructions" or "Act as" attacks
     threats = [
-        (r"ignore.*instruction", "Bypass Attempt"),
-        (r"reveal.*prompt", "Data Leak Attempt"),
-        (r"system.*prompt", "System Discovery"),
-        (r"act as", "Persona Hijack"),
-        (r"api key", "Credential Theft")
+        (r"(forget|ignore|disregard|override).*(instruction|previous|rule|system|prompt)", "Instruction Bypass"),
+        (r"(reveal|show|what is).*(system|internal|hidden).*(prompt|instruction)", "System Leak"),
+        (r"act as|you are now|pretend to be", "Persona Hijacking"),
+        (r"dan mode|jailbreak|unlock", "Safety Override")
     ]
     
     for pattern, label in threats:
         if re.search(pattern, p):
             return True, label
-            
     return False, None
 # import re
 
 # def detect_prompt_injection(prompt):
 #     p = prompt.lower()
     
-#     # Advanced patterns used by hackers
-#     threat_patterns = {
-#         r"ignore (all|previous|said) instructions": "Instruction Bypass",
-#         r"(reveal|show) (system|hidden) prompt": "Data Extraction",
-#         r"api key": "Credential Theft",
-#         r"act as": "Roleplay Attack",
-#         r"jailbreak": "Safety Override"
-#     }
+#     # Advanced logic: looks for keywords even if words are inserted between them
+#     threats = [
+#         (r"ignore.*instruction", "Bypass Attempt"),
+#         (r"reveal.*prompt", "Data Leak Attempt"),
+#         (r"system.*prompt", "System Discovery"),
+#         (r"act as", "Persona Hijack"),
+#         (r"api key", "Credential Theft")
+#     ]
     
-#     for pattern, label in threat_patterns.items():
+#     for pattern, label in threats:
 #         if re.search(pattern, p):
 #             return True, label
             
-#     return False, None
-# import re
-
-# dangerous_patterns = [
-#     r"ignore (all|previous) instructions",
-#     r"system prompt",
-#     r"as a (dev|developer|admin)",
-#     r"reveal secret",
-#     r"bypass",
-#     r"jailbreak",
-#     r"sql injection",
-#     r"<script>",
-#     r"decode this base64"
-# ]
-
-# def detect_prompt_injection(prompt):
-#      p = prompt.lower()
-#     # Check for keywords even if words are between them
-#     if "ignore" in p and "instruction" in p:
-#         return True, "Instruction Override Attempt"
-#     if "secret" in p or "system prompt" in p:
-#         return True, "Data Leak Attempt"
-#     return False, None
-    # for pattern in dangerous_patterns:
-    #     if re.search(pattern, prompt, re.IGNORECASE):
-    #         return True, pattern
-    # return False, None
-# import re
-# dangerous_patterns = [
-#      r"ignore previous instructions",
-#      r"reveal system prompt",
-#      r"show hidden instructions",
-#      r"give me api key",
-#      r"bypass safety",
-#      r"pretend you are not an ai",
-#     r"jailbreak",
-#     r"act as system",
-#     r"reveal hidden prompt"
-# ]
-
-# def detect_prompt_injection(prompt):
-#     prompt_lower = prompt.lower()
-
-#     for pattern in dangerous_patterns:
-#         if pattern in prompt_lower:
-#             return True, pattern
-
 #     return False, None
