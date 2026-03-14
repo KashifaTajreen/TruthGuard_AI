@@ -1,8 +1,36 @@
 import streamlit as st
 import requests
+import re
+
+def clean_text(text):
+
+    lines = text.split("\n")
+    cleaned = []
+
+    banned = ["edit","image","background","navigation","menu"]
+
+    for l in lines:
+        line = l.strip()
+
+        if len(line) < 40:
+            continue
+
+        bad = False
+        for b in banned:
+            if b in line.lower():
+                bad = True
+                break
+
+        if not bad:
+            cleaned.append(line)
+
+    return "\n\n".join(cleaned)
+
 
 def get_ai_response(prompt):
+
     try:
+
         api_key = st.secrets.get("TAVILY_API_KEY")
 
         url = "https://api.tavily.com/search"
@@ -14,26 +42,32 @@ def get_ai_response(prompt):
             "max_results": 5
         }
 
-        response = requests.post(url, json=payload, timeout=10)
+        response = requests.post(url,json=payload,timeout=10)
 
         if response.status_code == 200:
+
             data = response.json()
 
             paragraphs = []
 
-            for r in data.get("results", []):
-                content = r.get("content", "")
-                if content:
-                    paragraphs.append(content)
+            for r in data.get("results",[]):
+
+                text = r.get("content","")
+
+                text = clean_text(text)
+
+                if text:
+                    paragraphs.append(text)
 
             answer = "\n\n".join(paragraphs)
 
             if answer:
-                return answer[:1500]
+                return answer[:2000]
 
-        return "No detailed response found."
+        return "No detailed answer found."
 
     except Exception as e:
+
         return f"ERROR: {str(e)}"
 # import streamlit as st
 # import requests
@@ -41,37 +75,34 @@ def get_ai_response(prompt):
 # def get_ai_response(prompt):
 #     try:
 #         api_key = st.secrets.get("TAVILY_API_KEY")
+
 #         url = "https://api.tavily.com/search"
 
 #         payload = {
 #             "api_key": api_key,
 #             "query": prompt,
-#             "include_answer": True,
 #             "search_depth": "advanced",
 #             "max_results": 5
 #         }
 
-#         response = requests.post(url, json=payload, timeout=15)
+#         response = requests.post(url, json=payload, timeout=10)
 
 #         if response.status_code == 200:
-
 #             data = response.json()
 
-#             # Tavily short answer
-#             answer = data.get("answer", "")
+#             paragraphs = []
 
-#             # Extra content from search results
-#             extra_content = " ".join(
-#                 [r.get("content", "") for r in data.get("results", [])]
-#             )
+#             for r in data.get("results", []):
+#                 content = r.get("content", "")
+#                 if content:
+#                     paragraphs.append(content)
 
-#             # Combine them to form longer paragraph output
-#             full_answer = (answer + "\n\n" + extra_content).strip()
+#             answer = "\n\n".join(paragraphs)
 
-#             # limit extremely long outputs
-#             return full_answer[:1200]
+#             if answer:
+#                 return answer[:1500]
+
+#         return "No detailed response found."
 
 #     except Exception as e:
-#         return f"ERROR: Unified API Failure - {str(e)}"
-
-#     return "ERROR: Could not connect to Intel Node."
+#         return f"ERROR: {str(e)}"
