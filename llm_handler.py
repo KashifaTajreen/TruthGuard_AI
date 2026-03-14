@@ -3,7 +3,7 @@ from groq import Groq
 
 def get_ai_response(prompt, context=""):
     try:
-        key = st.secrets.get("GROQ_API_KEY")
+        key = st.secrets.get("TAVILY_API_KEY")
         if not key: return "ERROR: API KEY MISSING"
         
         client = Groq(api_key=key)
