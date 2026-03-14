@@ -3,6 +3,7 @@ import requests
 import re
 from urllib.parse import urlparse
 
+
 def check_real_time(query):
 
     try:
@@ -21,36 +22,36 @@ def check_real_time(query):
             "max_results": 5
         }
 
-        response = requests.post(url,json=payload,timeout=10)
+        response = requests.post(url, json=payload, timeout=10)
 
         if response.status_code == 200:
 
             data = response.json()
 
             combined_text = " ".join(
-                [r["content"] for r in data.get("results",[])]
+                [r["content"] for r in data.get("results", [])]
             )
 
             sources = []
 
-            for r in data.get("results",[]):
+            for r in data.get("results", []):
 
                 domain = urlparse(r["url"]).netloc.lower()
 
-                name = domain.replace("www.","").split(".")[0]
+                name = domain.replace("www.", "").split(".")[0]
 
                 if name == "en":
                     name = domain.split(".")[1]
 
                 sources.append({
-                    "title":name.capitalize(),
-                    "url":r["url"],
-                    "content":r["content"]
+                    "title": name.capitalize(),
+                    "url": r["url"],
+                    "content": r["content"]
                 })
 
             return {
-                "text":combined_text,
-                "sources":sources
+                "text": combined_text,
+                "sources": sources
             }
 
     except:
@@ -61,14 +62,21 @@ def check_real_time(query):
 
 def split_claims(text):
 
-    sentences = re.split(r'[.!?]',text)
+    sentences = re.split(r'[.!?]', text)
 
-    claims = [s.strip() for s in sentences if len(s.strip()) > 20]
+    claims = []
+
+    for s in sentences:
+
+        s = s.strip()
+
+        if len(s) > 20:
+            claims.append(s)
 
     return claims[:8]
 
 
-def claim_score(claims,source_text):
+def claim_score(claims, source_text):
 
     verified = 0
 
@@ -80,18 +88,21 @@ def claim_score(claims,source_text):
 
             verified += 1
 
-            results.append((c,True))
+            results.append((c, True))
 
         else:
 
-            results.append((c,False))
+            results.append((c, False))
 
     if len(claims) == 0:
-        score = 0
-    else:
-        score = round((verified/len(claims))*100)
 
-    return score,results
+        score = 0
+
+    else:
+
+        score = round((verified / len(claims)) * 100)
+
+    return score, results
 # import streamlit as st
 # import requests
 # import re
